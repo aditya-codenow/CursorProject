@@ -2,7 +2,7 @@
 
 A simple landing page for **cab booking** with:
 
-- Source + destination fields
+- Source + destination fields (fetched from local file based database)
 - Date and time selection
 - A **Reset fields** button that clears inputs and messages
 
