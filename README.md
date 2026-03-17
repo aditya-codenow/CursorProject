@@ -6,17 +6,26 @@ A simple landing page for **cab booking** with:
 - Date and time selection
 - A **Reset fields** button that clears inputs and messages
 
-## Run locally
+## Run locally (dynamic dropdowns + SQLite)
 
-Option 1 (simplest):
-
-- Open `index.html` in your browser (double-click it)
-
-Option 2 (local server, recommended):
+1) Install dependencies
 
 ```bash
-python -m http.server 5500
+npm install
 ```
 
-Then open `http://localhost:5500` and click `index.html`.
+2) Start the server
+
+```bash
+npm start
+```
+
+3) Open in browser
+
+- Open `http://localhost:3000`
+
+### Notes
+
+- The server creates a local SQLite DB at `data/swiftcab.db` and seeds sample locations on first run.
+- Location dropdowns are loaded from `GET /api/locations`.
 

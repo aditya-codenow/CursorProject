@@ -33,10 +33,14 @@ function clearErrors() {
 function validate({ source, destination, date, time }) {
   const errors = {};
 
-  if (!source.trim()) errors.source = "Please enter a source.";
-  if (!destination.trim()) errors.destination = "Please enter a destination.";
+  if (!String(source ?? "").trim()) errors.source = "Please select a source.";
+  if (!String(destination ?? "").trim()) errors.destination = "Please select a destination.";
 
-  if (source.trim() && destination.trim() && source.trim().toLowerCase() === destination.trim().toLowerCase()) {
+  if (
+    String(source ?? "").trim() &&
+    String(destination ?? "").trim() &&
+    String(source).trim().toLowerCase() === String(destination).trim().toLowerCase()
+  ) {
     errors.destination = "Destination must be different from source.";
   }
 
@@ -63,6 +67,56 @@ function readForm() {
   const rideType = $("#rideType")?.value ?? "Sedan";
 
   return { source, destination, date, time, rideType };
+}
+
+function setSelectOptions(selectEl, locations) {
+  if (!selectEl) return;
+  const current = selectEl.value;
+  selectEl.innerHTML = "";
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  placeholder.textContent = "Select a location";
+  selectEl.appendChild(placeholder);
+
+  for (const loc of locations) {
+    const opt = document.createElement("option");
+    opt.value = loc.name;
+    opt.textContent = loc.name;
+    selectEl.appendChild(opt);
+  }
+
+  // Try to restore previous selection if still present
+  if (current && locations.some((l) => l.name === current)) {
+    selectEl.value = current;
+  }
+}
+
+async function loadLocations() {
+  const sourceEl = $("#source");
+  const destEl = $("#destination");
+  try {
+    const res = await fetch("/api/locations", { headers: { Accept: "application/json" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const locations = Array.isArray(data.locations) ? data.locations : [];
+    if (!locations.length) throw new Error("No locations found");
+
+    setSelectOptions(sourceEl, locations);
+    setSelectOptions(destEl, locations);
+  } catch (err) {
+    if (sourceEl) {
+      sourceEl.innerHTML = `<option value="" selected disabled>Unable to load locations</option>`;
+      sourceEl.disabled = true;
+    }
+    if (destEl) {
+      destEl.innerHTML = `<option value="" selected disabled>Unable to load locations</option>`;
+      destEl.disabled = true;
+    }
+    showResult("Could not load locations. Please start the Node server and refresh.", "error");
+  }
 }
 
 function resetForm() {
@@ -117,10 +171,13 @@ document.addEventListener("DOMContentLoaded", () => {
     timeInput.value = `${hh}:${mi}`;
   }
 
+  loadLocations();
+
   resetBtn?.addEventListener("click", resetForm);
 
   ["#source", "#destination", "#date", "#time", "#rideType"].forEach((sel) => {
-    $(sel)?.addEventListener("input", () => {
+    const ev = sel === "#source" || sel === "#destination" || sel === "#rideType" ? "change" : "input";
+    $(sel)?.addEventListener(ev, () => {
       clearErrors();
       hideResult();
     });

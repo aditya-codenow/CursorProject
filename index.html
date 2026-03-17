@@ -70,45 +70,20 @@
               <div class="grid">
                 <div class="field">
                   <label class="label" for="source">Source</label>
-                  <input
-                    class="input"
-                    id="source"
-                    name="source"
-                    type="text"
-                    placeholder="e.g., Indiranagar"
-                    autocomplete="address-level2"
-                    list="placeSuggestions"
-                    required
-                  />
+                  <select class="input" id="source" name="source" required>
+                    <option value="" selected disabled>Loading locations…</option>
+                  </select>
                   <p class="error" id="sourceError" aria-live="polite"></p>
                 </div>
 
                 <div class="field">
                   <label class="label" for="destination">Destination</label>
-                  <input
-                    class="input"
-                    id="destination"
-                    name="destination"
-                    type="text"
-                    placeholder="e.g., Kempegowda Airport"
-                    autocomplete="address-level2"
-                    list="placeSuggestions"
-                    required
-                  />
+                  <select class="input" id="destination" name="destination" required>
+                    <option value="" selected disabled>Loading locations…</option>
+                  </select>
                   <p class="error" id="destinationError" aria-live="polite"></p>
                 </div>
               </div>
-
-              <datalist id="placeSuggestions">
-                <option value="Airport"></option>
-                <option value="Railway Station"></option>
-                <option value="Bus Stand"></option>
-                <option value="MG Road"></option>
-                <option value="Indiranagar"></option>
-                <option value="Koramangala"></option>
-                <option value="Whitefield"></option>
-                <option value="Electronic City"></option>
-              </datalist>
 
               <div class="grid grid--3">
                 <div class="field">

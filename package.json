@@ -1,0 +1,16 @@
+{
+  "name": "swiftcab-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cab booking landing page served by Express with SQLite-backed location dropdowns.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.2.0",
+    "express": "^5.1.0"
+  }
+}
+
