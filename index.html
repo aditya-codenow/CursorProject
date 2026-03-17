@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SwiftCab — Book a cab in seconds</title>
+    <meta
+      name="description"
+      content="Book a cab from source to destination with date and time selection. Fast, reliable, and upfront pricing."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#booking">Skip to booking</a>
+
+    <header class="topbar" role="banner">
+      <div class="container topbar__inner">
+        <div class="brand" aria-label="SwiftCab">
+          <span class="brand__mark" aria-hidden="true">SC</span>
+          <span class="brand__name">SwiftCab</span>
+        </div>
+        <nav class="nav" aria-label="Primary">
+          <a class="nav__link" href="#how">How it works</a>
+          <a class="nav__link" href="#booking">Book now</a>
+          <a class="nav__link" href="#support">Support</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-label="Hero">
+        <div class="container hero__grid">
+          <div class="hero__content">
+            <p class="pill">City rides • Airport • Outstation</p>
+            <h1 class="hero__title">Book a cab from source to destination—on your schedule.</h1>
+            <p class="hero__subtitle">
+              Choose pickup, drop, date and time. We’ll match you with a nearby driver and show an instant
+              confirmation.
+            </p>
+
+            <div class="hero__stats" aria-label="Highlights">
+              <div class="stat">
+                <div class="stat__value">4.8★</div>
+                <div class="stat__label">Average rating</div>
+              </div>
+              <div class="stat">
+                <div class="stat__value">2 min</div>
+                <div class="stat__label">Typical match time</div>
+              </div>
+              <div class="stat">
+                <div class="stat__value">24×7</div>
+                <div class="stat__label">Availability</div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="card" id="booking" aria-label="Cab booking form">
+            <div class="card__head">
+              <h2 class="card__title">Book a cab</h2>
+              <p class="card__hint">Enter trip details and pick your date & time.</p>
+            </div>
+
+            <form id="bookingForm" class="form" novalidate>
+              <div class="grid">
+                <div class="field">
+                  <label class="label" for="source">Source</label>
+                  <input
+                    class="input"
+                    id="source"
+                    name="source"
+                    type="text"
+                    placeholder="e.g., Indiranagar"
+                    autocomplete="address-level2"
+                    list="placeSuggestions"
+                    required
+                  />
+                  <p class="error" id="sourceError" aria-live="polite"></p>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="destination">Destination</label>
+                  <input
+                    class="input"
+                    id="destination"
+                    name="destination"
+                    type="text"
+                    placeholder="e.g., Kempegowda Airport"
+                    autocomplete="address-level2"
+                    list="placeSuggestions"
+                    required
+                  />
+                  <p class="error" id="destinationError" aria-live="polite"></p>
+                </div>
+              </div>
+
+              <datalist id="placeSuggestions">
+                <option value="Airport"></option>
+                <option value="Railway Station"></option>
+                <option value="Bus Stand"></option>
+                <option value="MG Road"></option>
+                <option value="Indiranagar"></option>
+                <option value="Koramangala"></option>
+                <option value="Whitefield"></option>
+                <option value="Electronic City"></option>
+              </datalist>
+
+              <div class="grid grid--3">
+                <div class="field">
+                  <label class="label" for="date">Date</label>
+                  <input class="input" id="date" name="date" type="date" required />
+                  <p class="error" id="dateError" aria-live="polite"></p>
+                </div>
+                <div class="field">
+                  <label class="label" for="time">Time</label>
+                  <input class="input" id="time" name="time" type="time" required />
+                  <p class="error" id="timeError" aria-live="polite"></p>
+                </div>
+                <div class="field">
+                  <label class="label" for="rideType">Ride type</label>
+                  <select class="input" id="rideType" name="rideType">
+                    <option value="Mini">Mini</option>
+                    <option value="Sedan" selected>Sedan</option>
+                    <option value="SUV">SUV</option>
+                  </select>
+                  <p class="help">Optional</p>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button class="btn btn--primary" type="submit">Book cab</button>
+                <button class="btn btn--ghost" type="button" id="resetBtn">Reset fields</button>
+              </div>
+
+              <div class="notice" id="result" role="status" aria-live="polite" hidden></div>
+              <p class="fineprint">
+                By booking, you agree to our <a href="#support">terms</a>. This demo doesn’t place a real ride.
+              </p>
+            </form>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="how" aria-label="How it works">
+        <div class="container">
+          <h2 class="section__title">How it works</h2>
+          <div class="features">
+            <div class="feature">
+              <div class="feature__icon" aria-hidden="true">1</div>
+              <div>
+                <h3 class="feature__title">Enter locations</h3>
+                <p class="feature__text">Add source and destination. We’ll validate they’re different.</p>
+              </div>
+            </div>
+            <div class="feature">
+              <div class="feature__icon" aria-hidden="true">2</div>
+              <div>
+                <h3 class="feature__title">Pick date & time</h3>
+                <p class="feature__text">Schedule now or later with built-in date and time selectors.</p>
+              </div>
+            </div>
+            <div class="feature">
+              <div class="feature__icon" aria-hidden="true">3</div>
+              <div>
+                <h3 class="feature__title">Confirm</h3>
+                <p class="feature__text">Get a clear confirmation summary and reset anytime.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--muted" id="support" aria-label="Support">
+        <div class="container support">
+          <div>
+            <h2 class="section__title">Need help?</h2>
+            <p class="section__text">
+              This is a static landing page template. If you want it wired to a backend (pricing, driver
+              allocation, payments), tell me your stack.
+            </p>
+          </div>
+          <div class="support__card" role="note" aria-label="Support info">
+            <p class="support__line"><span class="support__k">Email</span> <span>support@swiftcab.example</span></p>
+            <p class="support__line"><span class="support__k">Hours</span> <span>24×7</span></p>
+            <p class="support__line"><span class="support__k">Response</span> <span>Under 15 minutes</span></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+      <div class="container footer__inner">
+        <p>© <span id="year"></span> SwiftCab. All rights reserved.</p>
+        <p class="footer__links">
+          <a href="#booking">Book</a>
+          <a href="#how">How it works</a>
+          <a href="#support">Support</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
