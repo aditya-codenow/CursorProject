@@ -121,6 +121,30 @@ a:hover {
   text-decoration: none;
 }
 
+.welcome-banner {
+  background: linear-gradient(
+    90deg,
+    rgba(110, 231, 255, 0.12) 0%,
+    rgba(167, 139, 250, 0.12) 50%,
+    rgba(34, 197, 94, 0.1) 100%
+  );
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.welcome-banner__inner {
+  padding: 12px 0;
+  text-align: center;
+}
+
+.welcome-banner__text {
+  margin: 0;
+  font-size: clamp(15px, 2vw, 18px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 18px rgba(110, 231, 255, 0.25);
+}
+
 .hero {
   padding: 54px 0 34px;
 }
