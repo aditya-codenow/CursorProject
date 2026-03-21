@@ -1,0 +1,117 @@
+name: Playwright CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Playwright Tests
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.0-jammy
+    env:
+      CI: "true"
+      PLAYWRIGHT_HTML_REPORT: playwright-report
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-ms-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-ms-playwright-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers and OS deps
+        run: npx playwright install --with-deps
+
+      - name: Start SwiftCab app server
+        run: |
+          set -euo pipefail
+          if [ -f "./server.js" ]; then
+            SERVER_ROOT="."
+          elif [ -f "../CursorProject/server.js" ]; then
+            SERVER_ROOT="../CursorProject"
+          else
+            echo "server.js not found in ./ or ../CursorProject. Please ensure app server source is available in CI."
+            exit 1
+          fi
+          echo "Starting server from ${SERVER_ROOT}/server.js"
+          node "${SERVER_ROOT}/server.js" > server.log 2>&1 &
+          echo $! > server.pid
+
+      - name: Wait for server health
+        run: |
+          set -euo pipefail
+          ATTEMPTS=30
+          for i in $(seq 1 "$ATTEMPTS"); do
+            if curl -fsS "http://localhost:3000" > /dev/null; then
+              echo "Server is up on localhost:3000"
+              exit 0
+            fi
+            if [ -f server.pid ] && ! kill -0 "$(cat server.pid)" 2>/dev/null; then
+              echo "Server process exited unexpectedly."
+              break
+            fi
+            sleep 2
+          done
+          echo "Server failed to become healthy in time."
+          if [ -f server.log ]; then
+            echo "---- server.log ----"
+            cat server.log
+          fi
+          exit 1
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: playwright-report/
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Upload traces and test artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure-artifacts
+          path: |
+            test-results/
+            *.zip
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Upload server logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swiftcab-server-logs
+          path: server.log
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f server.pid ]; then
+            kill "$(cat server.pid)" || true
+          fi
